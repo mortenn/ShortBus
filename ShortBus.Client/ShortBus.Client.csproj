@@ -51,7 +51,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceBusFramework\ShortBus.Contracts.csproj">
+    <ProjectReference Include="..\ShortBus.Contracts\ShortBus.Contracts.csproj">
       <Project>{CBB9E494-7CAE-4751-A5D3-EDC475641BD6}</Project>
       <Name>ShortBus.Contracts</Name>
     </ProjectReference>

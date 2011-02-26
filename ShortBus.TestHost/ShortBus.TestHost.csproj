@@ -49,11 +49,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceBusData\ShortBus.SQLStore.csproj">
+    <ProjectReference Include="..\ShortBus.SQLStore\ShortBus.SQLStore.csproj">
       <Project>{B3C0889A-6501-4BC6-AA33-688CD5DA31F5}</Project>
       <Name>ShortBus.SQLStore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ServiceBusFramework\ShortBus.Contracts.csproj">
+    <ProjectReference Include="..\ShortBus.Contracts\ShortBus.Contracts.csproj">
       <Project>{CBB9E494-7CAE-4751-A5D3-EDC475641BD6}</Project>
       <Name>ShortBus.Contracts</Name>
     </ProjectReference>
