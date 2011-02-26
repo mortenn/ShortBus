@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ServiceBusModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="ServiceBusModelStoreContainer">
+          <EntitySet Name="Subscribers" EntityType="ServiceBusModel.Store.Subscribers" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="Subscribers">
+          <Key>
+            <PropertyRef Name="subscriber" />
+          </Key>
+          <Property Name="subscriber" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="endpoint" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="last_seen" Type="datetime" Nullable="false" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ServiceBusModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="ServiceBusModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Subscribers" EntityType="ServiceBusModel.Subscriber" />
+        </EntityContainer>
+        <EntityType Name="Subscriber">
+          <Key>
+            <PropertyRef Name="subscriber" />
+          </Key>
+          <Property Type="Guid" Name="subscriber" Nullable="false" />
+          <Property Type="String" Name="endpoint" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="last_seen" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ServiceBusModelStoreContainer" CdmEntityContainer="ServiceBusModelContainer">
+          <EntitySetMapping Name="Subscribers">
+            <EntityTypeMapping TypeName="ServiceBusModel.Subscriber">
+              <MappingFragment StoreEntitySet="Subscribers">
+                <ScalarProperty Name="last_seen" ColumnName="last_seen" />
+                <ScalarProperty Name="endpoint" ColumnName="endpoint" />
+                <ScalarProperty Name="subscriber" ColumnName="subscriber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="ServiceBusModel" >
+        <EntityTypeShape EntityType="ServiceBusModel.Subscriber" Width="1.5" PointX="0.75" PointY="0.75" Height="1.5956835937499996" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
