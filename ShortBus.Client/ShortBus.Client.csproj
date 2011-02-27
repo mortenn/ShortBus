@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientPump.cs" />
-    <Compile Include="MSMQServerWrapper.cs" />
+    <Compile Include="MSMQServerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

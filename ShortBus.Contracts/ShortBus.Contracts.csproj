@@ -37,7 +37,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMSMQWrapper.cs" />
+    <Compile Include="IFactory.cs" />
     <Compile Include="IServiceBusServer.cs" />
     <Compile Include="IServiceBusClient.cs" />
     <Compile Include="ISubscriberStore.cs" />
