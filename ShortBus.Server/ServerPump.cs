@@ -14,22 +14,13 @@ namespace ShortBus
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.Single)]
     public class ServerPump : IServiceBusServer
     {
-        public ServerPump()
-        {
-            if (!MessageQueue.Exists(".\\private$\\shortbus"))
-            {
-                MessageQueue queue = MessageQueue.Create(".\\private$\\shortbus", true);
-                queue.Authenticate = false;
-                queue.EncryptionRequired = EncryptionRequired.Optional;
-            }
-        }
-
         public ISubscriberStore Storage { get; set; }
+
+        public IFactory<IServiceBusClient> ClientFactory { get; set; }
 
         public void Subscribe(Guid clientId, string endpoint)
         {
             Debug.WriteLine("{0} subscribed at {1}", clientId, endpoint);
-            Storage.ClearEndpoint(endpoint);
             if (clientId != Guid.Empty)
                 Storage.AddSubscriber(clientId, endpoint);
         }
@@ -62,6 +53,12 @@ namespace ShortBus
 
         public void Start()
         {
+            if (!MessageQueue.Exists(".\\private$\\shortbus"))
+            {
+                MessageQueue queue = MessageQueue.Create(".\\private$\\shortbus", true);
+                queue.Authenticate = false;
+                queue.EncryptionRequired = EncryptionRequired.Optional;
+            }
             if (host == null)
                 host = new ServiceHost(this);
             host.Open();
@@ -80,7 +77,7 @@ namespace ShortBus
         void SendMessage(Subscriber subscription, ServiceBusEvent data)
         {
             if (!clients.ContainsKey(subscription.SubscriberId))
-                clients.Add(subscription.SubscriberId, new MSMQClientWrapper(subscription.Endpoint));
+                clients.Add(subscription.SubscriberId, ClientFactory.Connect(subscription.Endpoint));
             try
             {
                 clients[subscription.SubscriberId].Consume(data);
@@ -107,7 +104,7 @@ namespace ShortBus
                         continue;
                     }
                     if (!clients.ContainsKey(sub.SubscriberId))
-                        clients.Add(sub.SubscriberId, new MSMQClientWrapper(sub.Endpoint));
+                        clients.Add(sub.SubscriberId, ClientFactory.Connect(sub.Endpoint));
                     try
                     {
                         Debug.WriteLine("Checking {0} for a pulse", sub.SubscriberId);

@@ -18,7 +18,7 @@ namespace ShortBus
     public class ClientPump : IServiceBusClient
     {
         /// <summary>
-        /// Connect to the given server endpoint and subscribe to events
+        /// Connect to the given server endpoint and subscribe to events using a new client ID
         /// </summary>
         /// <param name="serverEndpoint"></param>
         public ClientPump(string serverEndpoint)
@@ -27,30 +27,17 @@ namespace ShortBus
         }
 
         /// <summary>
-        /// Connect to the given server endpoint and subscribe to events
-        /// </summary>
-        /// <param name="serverEndpoint"></param>
-        /// <param name="id"></param>
-        public ClientPump(string serverEndpoint, Guid id)
-            : this(serverEndpoint,
-                new Uri(string.Format("net.msmq://{0}/private/shortbus_{1}", System.Net.Dns.GetHostName(), id)),
-                string.Format(@".\private$\shortbus_{0}", id)
-            )
-        {
-            myId = id;
-        }
-
-        /// <summary>
-        /// Connect to the given server endpoint and subscribe to events using the given queue name and client endpoint
+        /// Connect to the given server endpoint and subscribe to events using the given client ID
         /// </summary>
         /// <param name="serverEndpoint">net.msmq://servername/private/shortbus</param>
-        /// <param name="endpoint">net.msmq://computername/private/shortbusclient</param>
-        /// <param name="queueName">.\private$\shortbusclient</param>
-        public ClientPump(string serverEndpoint, Uri endpoint, string queueName)
+        /// <param name="clientId">The Guid to use for this client</param>
+        public ClientPump(string serverEndpoint, Guid clientId)
         {
-            Endpoint = endpoint;
-            QueueName = queueName;
-            server = new MSMQServerWrapper(serverEndpoint);
+            myId = clientId;
+            Endpoint = new Uri(string.Format("net.msmq://{0}/private/shortbus_{1}", System.Net.Dns.GetHostName(), myId));
+            QueueName = string.Format(@".\private$\shortbus_{0}", myId);
+
+            server = new MSMQServerFactory().Connect(serverEndpoint);
             if (!MessageQueue.Exists(QueueName))
             {
                 MessageQueue queue = MessageQueue.Create(QueueName, true);
@@ -187,6 +174,6 @@ namespace ShortBus
 
         ServiceHost host;
         Guid myId;
-        MSMQServerWrapper server;
+        IServiceBusServer server;
     }
 }
