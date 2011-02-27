@@ -19,3 +19,4 @@ ShortBus1.vsmdi
 TraceAndTestImpact.testsettings
 Local.testsettings
 ShortBus.suo
+ShortBus.Server/ShortBus.Server.csproj.user

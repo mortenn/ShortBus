@@ -9,7 +9,7 @@ using System.ServiceModel;
 using System.Diagnostics;
 using System.Timers;
 
-namespace ShortBus
+namespace ShortBus.Server
 {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.Single)]
     public class ServerPump : IServiceBusServer
@@ -21,9 +21,9 @@ namespace ShortBus
         public ServerPump()
         {
             ClientFactory = new MSMQClientFactory();
-            HeartbeatTimeout = 5000;
-            CheckHeartbeatAfter = new TimeSpan(0, 10, 0);
-            MessageQueueName = ".\\private$\\shortbus";
+            HeartbeatTimeout = Configuration.Config.HeartbeatTimeout;
+            CheckHeartbeatAfter = Configuration.Config.CheckHeartbeatAfter;
+            MessageQueueName = Configuration.Config.MessageQueueName;
         }
 
         /// <summary>

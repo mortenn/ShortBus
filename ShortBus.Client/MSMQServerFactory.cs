@@ -6,7 +6,7 @@ using System.Messaging;
 using System.ServiceModel;
 using ShortBus.Contracts;
 
-namespace ShortBus
+namespace ShortBus.Client
 {
     /// <summary>
     /// A client should only ever have one of these

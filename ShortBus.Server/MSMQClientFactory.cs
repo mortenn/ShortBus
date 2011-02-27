@@ -6,7 +6,7 @@ using System.Messaging;
 using System.ServiceModel;
 using ShortBus.Contracts;
 
-namespace ShortBus
+namespace ShortBus.Server
 {
     public class MSMQClientFactory : IFactory<IServiceBusClient>
     {

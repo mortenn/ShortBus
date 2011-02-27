@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
-using ShortBus;
+using ShortBus.Client;
 
 namespace ShortBus.TestClient
 {
@@ -11,7 +11,7 @@ namespace ShortBus.TestClient
     {
         static void Main(string[] args)
         {
-            client = new ClientPump("net.msmq://tsunami/private/shortbus");
+            client = new ClientPump();
             client.Consumer = ShowMessage;
             client.Start();
 
@@ -84,8 +84,6 @@ namespace ShortBus.TestClient
 
         static void ShowMessage(ShortBus.Contracts.ServiceBusEvent e)
         {
-            if (e.MessageSent < startup)
-                return;
             lock (consoleLock)
             {
                 ClearLine();

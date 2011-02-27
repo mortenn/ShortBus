@@ -1,7 +1,7 @@
-﻿using ShortBus;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using ShortBus.Contracts;
+using ShortBus.Server;
 using Moq;
 
 namespace ShortBus.UnitTests

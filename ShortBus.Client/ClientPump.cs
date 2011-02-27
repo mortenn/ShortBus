@@ -7,7 +7,7 @@ using System.Messaging;
 using System.ServiceModel;
 using System.Threading;
 
-namespace ShortBus
+namespace ShortBus.Client
 {
     /// <summary>
     /// ShortBus client service.
@@ -17,6 +17,14 @@ namespace ShortBus
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
     public class ClientPump : IServiceBusClient
     {
+        /// <summary>
+        /// Connect to the server specified app.config using a new client ID
+        /// </summary>
+        public ClientPump()
+            : this(Configuration.Config.ServerEndpoint, Guid.NewGuid())
+        {
+        }
+
         /// <summary>
         /// Connect to the given server endpoint and subscribe to events using a new client ID
         /// </summary>
@@ -34,21 +42,21 @@ namespace ShortBus
         public ClientPump(string serverEndpoint, Guid clientId)
         {
             myId = clientId;
-            Endpoint = new Uri(string.Format("net.msmq://{0}/private/shortbus_{1}", System.Net.Dns.GetHostName(), myId));
-            QueueName = string.Format(@".\private$\shortbus_{0}", myId);
+            Endpoint = new Uri(string.Format(Configuration.Config.ClientEndpointFormat, System.Net.Dns.GetHostName(), myId));
+            QueueName = string.Format(Configuration.Config.ClientQueueFormat, myId);
 
             server = new MSMQServerFactory().Connect(serverEndpoint);
             if (!MessageQueue.Exists(QueueName))
             {
                 MessageQueue queue = MessageQueue.Create(QueueName, true);
-                queue.Authenticate = false;
-                queue.EncryptionRequired = EncryptionRequired.Optional;
+                queue.Authenticate = Configuration.Config.AuthenticationMode != MsmqAuthenticationMode.None;
+                queue.EncryptionRequired = Configuration.Config.Encryption;
             }
         }
 
         ~ClientPump()
         {
-            if (MessageQueue.Exists(QueueName))
+            if (!string.IsNullOrEmpty(QueueName) && MessageQueue.Exists(QueueName))
                 MessageQueue.Delete(QueueName);
         }
 
@@ -153,8 +161,8 @@ namespace ShortBus
             {
                 host = new ServiceHost(this);
                 NetMsmqBinding serviceBinding = new NetMsmqBinding();
-                serviceBinding.Security.Transport.MsmqAuthenticationMode = MsmqAuthenticationMode.None;
-                serviceBinding.Security.Transport.MsmqProtectionLevel = System.Net.Security.ProtectionLevel.None;
+                serviceBinding.Security.Transport.MsmqAuthenticationMode = Configuration.Config.AuthenticationMode;
+                serviceBinding.Security.Transport.MsmqProtectionLevel = Configuration.Config.Protection;
                 serviceBinding.MaxReceivedMessageSize = 100000;
                 serviceBinding.ReaderQuotas.MaxArrayLength = 500;
                 host.AddServiceEndpoint(typeof(IServiceBusClient), serviceBinding, Endpoint);
